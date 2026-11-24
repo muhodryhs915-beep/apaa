@@ -1,0 +1,984 @@
+<html lang="id">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Buat luu</title>
+
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                height: 100vh;
+                height: 100svh;
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-family: Arial, sans-serif;
+                background: #6C63A8;
+                padding: 20px;
+            }
+
+           .buku {
+                width: 100%;
+                max-width: 650px;
+                height: 100%;
+                max-height: 680px;
+                position: relative;
+                perspective: 1800px;
+                transform-style: preserve-3d;
+            }
+
+            .cover {
+                min-height: 680px;
+                background: #a7ade9;
+                border-radius: 20px;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                padding: 40px;
+                cursor: pointer;
+                box-shadow: #E8DDF5;
+                transition: 0.4s;
+                transform-origin: left center;
+                transition: transform 0.8s ease, opacity 0.8s ease;
+            }
+
+            .cover.buka {
+                transform: rotateY(-90deg);
+                opacity: 0;
+            }
+
+            .cover.transisi {
+                opacity: 0.5;
+                transition: transform 0.3s ease-in-out;
+                visibility: show;
+            }
+
+            .random {
+                position: absolute;
+                font-size: 40px;
+            }
+
+            .beruang1 {
+                top: 40px;
+                left: 30px;
+                transition: 0.3s;
+                transform: scale(0.8);
+            }
+
+            .beruang2 {
+                top: 35px;
+                right: 30px;
+            }
+
+            .beruang3 {
+                bottom: 80px;
+                left: 20px;
+            }
+
+            .beruang4 {
+                bottom: 70px;
+                right: 10px
+            }
+
+            .beruang5 {
+                left: 150px;
+                top: 350px;
+            }
+
+            #hal {
+                display: none;
+                height: 100%;
+                flex-direction: column;
+            }
+
+            .hal {
+                display: none;
+                flex: 1;
+                min-height: 0;
+                height: auto;
+                max-height: calc(100svh - 40px);
+                background: #FDF6F0;
+                border-radius: 20px;
+                padding: 25px 25px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                flex-direction: column;
+                align-items: center;
+                text-align: left;
+                overflow-y: auto;
+                overflow-x: hidden;
+                transform-origin: left center;
+                backface-visibility: hidden;
+                transform-style: preserve-3d;
+            }
+
+            .tomra{
+                cursor: pointer;
+                font-size: 20px;
+            }
+
+            #tomri{
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                background: rgba(0, 0, 0, 0.6);
+                z-index: 1000;
+            }
+
+            #rahasia {
+                display: none;
+                min-height: 100vh;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .petunjuk {
+                position: absolute;
+                font-size: 15px;
+                left: 60px;
+                top: 30px;
+            }
+
+           .hal h1 {
+                margin-top: 0;
+                margin-bottom: 20px;
+                font-size: 40px;
+                color: #7B5E8E;
+                text-align: center;
+            }
+
+            .cover h1 {
+                margin-bottom: 20px;
+                font-size: 40px;
+            }
+
+            .hal p {
+                margin-bottom: 7px;
+                font-size: 18px;
+                line-height: 1.35;
+                color: #3D3445;
+            }
+
+            .isi {  
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+            }
+
+            .stiker {
+            font-size: 200px;
+            }
+
+            .bunga {
+                cursor: pointer;
+                display: inline-block;
+                filter: drop-shadow(0 5px 2px #E89AAE);
+                transition: 0.3s;
+                transform: scale(0.8);
+            }
+
+            #munculbunga {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                background: rgba(0, 0, 0, 0.6);
+                z-index: 1000;
+                           
+            }
+            
+            .basa {
+                text-align: center;
+            }
+
+            .muor {
+                cursor: pointer;
+            }
+
+            .isipopup {
+                background: white;
+                padding: 30px;
+                border-radius: 20px;
+                text-align: center;
+                max-width: 400px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .isitomri{
+                background: white;
+                padding: 30px;
+                border-radius: 20px;
+                text-align: center;
+                max-width: 400px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .basa {
+                margin-top: 20px;
+            }
+                    
+            .hal.active {
+                display: flex;
+                flex-direction: column;
+                animation: masukKanan 0.6s ease;
+            }
+
+            .tombol {
+                display: flex;
+                width: 100%;
+                margin-top: 20px;
+            }
+
+            .tura{
+                margin-top: 50px;
+            }
+
+            #confetti-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                overflow: hidden;
+                z-index: 999;
+            }
+
+            .confetti {
+                position: absolute;
+                top: -50px;
+                font-size: 30px;
+                cursor: pointer;
+                pointer-events: auto;
+                animation: jatuh linear forwards;
+                transition: transform 0.2s;
+            }
+
+            button {
+                border: none;
+                padding: 12px 20px;
+                border-radius: 25px;
+                cursor: pointer;
+                font-size: 15px;
+                font-weight: bold;
+                transition: 0.3s;
+            }
+
+            .prev {
+                background: #D8D1C5;
+                color: #444;
+            }
+
+            .next {
+                background: #E89AAE;
+                color: white;
+                margin-left: auto;
+            }
+
+            button:hover, .bunga:hover, .beruang1:hover {
+                transform: scale(1.05);
+            }
+
+            .cover.transisi {
+                transform: scale(0.8);
+            }
+            
+            @keyframes masukKanan {
+                from {
+                    opacity: 0;
+                   transform: translateX(50px) rotateY(-90deg);
+                }
+
+                to {
+                    opacity: 1;
+                     transform: translateX(0) rotateY(0);
+                }
+            }
+
+            @keyframes bukaHalaman {
+                from {
+                    opacity: 0;
+                    transform: rotateY(90deg);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: rotateY(0deg);
+                }
+            }
+
+            @keyframes jatuh {
+
+                from {
+                    transform: translateY(0) rotate(0deg);
+                }
+
+                to {
+                    transform: translateY(110vh) rotate(720deg);
+                }
+
+            }
+
+            .confetti.meledak {
+                animation: ledakan 0.3s forwards;
+            }
+
+            @keyframes ledakan {
+
+                from {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+
+            }
+
+            #easterEgg {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                justify-content: center;
+                align-items: center;
+                background: rgba(0,0,0,0.7);
+                z-index: 2000;
+                text-align: center;
+            }
+
+            .kotakEgg {
+                background: white;
+                padding: 30px;
+                border-radius: 20px;
+                max-width: 400px;
+            }
+
+            .surat1{
+                display: flex;
+                cursor: pointer;
+                position: absolute;
+                font-size: 30px;
+                top: 10px;
+                right: 10px;
+
+            }
+
+            #surat{
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                background: rgba(0, 0, 0, 0.6);
+                z-index: 1000;
+            }
+
+            .isisurat{
+                background: white;
+                padding: 30px;
+                border-radius: 20px;
+                text-align: center;
+                max-width: 400px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .buku {
+                perspective: 1800px;
+                transform-style: preserve-3d;
+            }
+
+
+            .cover {
+                position: relative;
+                z-index: 10;
+                transform-origin: left center;
+                backface-visibility: hidden;
+                transition: transform 0.9s ease;
+            }
+
+
+            .cover.buka {
+                transform: rotateY(-180deg);
+                opacity: 0;
+                pointer-events: none;
+            }
+
+
+            .hal {
+                transform-origin: left center;
+                backface-visibility: hidden;
+                transform-style: preserve-3d;
+            }
+
+
+            .hal.flip-maju {
+                animation: flipMaju 0.65s ease;
+            }
+
+
+            .hal.flip-mundur {
+                animation: flipMundur 0.65s ease;
+            }
+
+            @keyframes flipMaju {
+                from {
+                    transform: rotateY(90deg);
+                    opacity: 0;
+                }
+
+                to {
+                    transform: rotateY(0deg);
+                    opacity: 1;
+                }
+            }
+
+            @keyframes flipMundur {
+                from {
+                    transform: rotateY(-90deg);
+                    opacity: 0;
+                }
+
+                to {
+                    transform: rotateY(0deg);
+                    opacity: 1;
+                }
+            }
+
+        @media (max-width: 600px) {
+            .hal {
+                max-height: calc(100svh - 40px);
+                padding: 25px 20px;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+
+            .hal h1 {
+                font-size: 30px;
+                margin-bottom: 15px;
+            }
+
+            .hal p {
+                font-size: 17px;
+                line-height: 1.4;
+                margin-bottom: 8px;
+            }
+
+            body {
+                padding: 20px;
+            }
+
+            .buku {
+                height: calc(100svh - 40px);
+            }
+
+        }
+
+        </style>
+
+        <link rel="stylesheet" href="STYLE.CSS">
+    </head>
+    <body>
+
+    <div id="confetti-container"></div>
+        
+    <div class="buku">
+        <div class="cover" id="cover" onclick="openBook()">
+            <h1>MY LOVE </h1>
+            <h1>FOR WANITA TERBAIK AKU </h1>
+            <h1>HAPPY BIRTHDAY</h1>
+            <div class="stiker">❤️</div>
+            
+            <div class="petunjuk">
+            ↓ gausah dipencet emotenya
+            </div>
+
+            <div class="random beruang1" onclick="beruangRahasia(event)">🥰</div>
+            <div class="random beruang2">❤️</div>
+            <div class="random beruang3">❤️</div>
+            <div class="random beruang4">🥰</div>
+            <div class="random beruang5">🥰</div>
+
+            <p class="isi">Dibuat dengan sedikit waktu, banyak pikiran</p>
+            
+        </div>
+
+        <div id="rahasia">
+            <h1>❤️WANITA TERHEBAT❤️</h1>
+            <h1>SEDIKIT PESAN </h1>
+            <p>❤️Harus lebih dewasa lagi🥰</p>
+            <p>jadi bini gua yang solehah yahh </p>
+            <p>panjang umur yahh cantik</p>
+            <p>sehat selalu cantik</p>
+            <p>jangan lupa makan ibadah nya</p>
+            <p>jangan terlalu capek</p>
+            <p>makan tepat waktu lu</p>
+            <p>ego nya jangan terlalu besar cantik</p>
+
+            <span class ="muor" onclick="muor()"><strong></strong></span>
+            <p id="gua" style="display: none;"><strong>IYAA GUAA</strong></p>
+            
+
+            <button class="tura" onclick="tutupRahasia()">
+                balik lagi
+            </button>
+        </div>
+
+        <div id="munculbunga">
+
+            <div class="isipopup">
+            <h1>pesan dari laki lu ini🌷</h1>
+            <p>sedih boleh nangis boleh tapi jangan terlalu sberlarut </p>
+            <p>teruslah berjuang sama sama aku </p>
+            <p>pikirin semua yang kamu lakukan seneng dan jangan terlalu cepek kalo lu sakit gua jauh inget yank</p>
+            <p>terus jadi orang tulus dan jadi orang yang sayang sama gua yahh sayang aku.</p>
+            <p>aku tau aku bukan orang yang baik tapi aku akan belajar jadi orang yang terbaik buat kamu yahh cantik maafin kesalahan aku</p>
+            </div>
+
+            <button class="basa" onclick="balikrahasia()">
+                balik sanaa
+            </button>
+        </div>
+    
+        <div id="tomri">
+            <div class="isitomri">
+            <h1>untuk kesayangan aku😭</h1>
+            <p>aku sayang bangat sama kamu jangan pernah tinggalin aku yahh sayang </p>
+            <p>harapan aku nambah usia kamu lebih dewasa lagi dan terus mau berjuang sama aku sampai di panggil keke nenek  kita sama sama terus yahh cantik aku</p>
+            <p>kamu wanita terbaik di dalam hidup aku aku nggak mau kamu aterlalalu capek dan terlalu sedih apapun yang terjadi akan aku usahakan baut kamu .</p>
+            <p>kamu wanita hebat kuat bagi aku dan kamu orang yang paling barharga di hidup aku kamu selalu dateeng ceria walau kadang kadang ngambek nya itu yang sering pisan uyy tapi gapapa itu cewek aku akku terima kamu apa ada nya </p>
+            <p>HAPPY BIRTHDAY</p>
+            </div>
+
+            <button class="basa" onclick="balikrahasia()">
+                kata gua balik
+            </button>
+        </div>
+
+        <div id="surat">
+            <div class= "isisurat">
+                <p>Pergi ke taman memetik melati,</p>
+                <p>Melihat kupu-kupu terbang berdua.</p>
+                <p>Selamat ulang tahun, pemilik hati,</p>
+                <p>Semoga bahagiamu selalu ada, dan aku tetap menjadi bagian di dalamnya.</p>
+            </div>
+
+            <button class="basa" onclick="balikrahasia()">
+                balik sana
+            </button>
+        </div>
+        
+
+      <div id="hal">
+        <div class="hal">
+            <h1>HAPPY BIRTHDAY, MY LOVE ❤️</h1>
+
+            <div class="isi">
+                <p>Happy Birthday, Dwi Luh Indah Stiani!</p>
+                <p>Selamat ulang tahun, sayangku. ❤️</p>
+                <p>Hari ini adalah hari spesial, karena seseorang yang begitu berarti dalam hidupku dilahirkan ke dunia. Aku mungkin tidak bisa memberikan seluruh hal indah yang ada di dunia ini, tetapi aku ingin kamu tahu bahwa aku selalu berharap dunia memperlakukanmu dengan baik.</p>
+                <p>Terima kasih sudah hadir dalam hidupku. Aku bersyukur bisa mengenalmu, menyayangimu, dan menjadi bagian dari cerita hidupmu.</p>
+                <p>Hari ini, izinkan aku merayakan satu hal yang paling aku syukuri: keberadaanmu.</p>
+                <p>I love you, more than words can explain.</p>
+                <p>selamat ulang tahun sayangg</p>
+            </div>
+        </div>
+
+        <div class="hal">
+            <h1>ANOTHER YEAR, ANOTHER BEAUTIFUL YOU</h1>
+
+            <div class="isi">
+                <p>Sayang, satu tahun lagi sudah kamu lewati.</p>
+                <p>Aku tahu perjalananmu selama ini tidak selalu mudah. Ada hari-hari yang mungkin melelahkan, ada hal-hal yang membuatmu kecewa, dan ada cerita yang mungkin tidak semuanya bisa kamu ceritakan kepadaku.</p>
+                <p>Namun, aku ingin kamu tahu bahwa aku bangga kepadamu. Bangga karena kamu sudah bertahan sejauh ini, karena kamu terus mencoba, dan karena kamu tetap menjadi dirimu sendiri.</p>
+                <p>Di usia yang baru ini, jangan terlalu keras kepada dirimu sendiri, ya. Kamu tidak harus selalu kuat, tidak harus selalu sempurna, dan tidak harus selalu punya jawaban atas semuanya.</p>
+                <p>Tumbuhlah dengan caramu sendiri, sayang. Aku akan selalu berharap yang terbaik untuk setiap langkahmu.</p>
+
+                <span class="tomra" onclick="tomra(event)"><strong>i love you</strong></span>
+
+            </div>
+        </div>
+
+        <div class="hal">
+            <h1>MY WISHES FOR YOU<span class="bunga" onclick="bungarahasia(event)">❤️</span></h1>
+
+            <div class="isi">
+                <p>Kalau boleh meminta banyak hal untukmu, aku ingin semuanya yang baik-baik datang menghampirimu.</strong></p>
+                <p>Aku berharap kamu selalu diberikan kesehatan, kebahagiaan, hati yang tenang, dan kekuatan untuk melewati hari-hari yang sulit.</p>
+                <p>Semoga segala impian yang selama ini kamu perjuangkan perlahan menemukan jalannya. Semoga setiap usaha yang kamu lakukan membuahkan hasil yang indah.</p>
+                <p>Aku juga berharap kamu selalu dikelilingi orang-orang yang tulus menyayangimu, yang menghargaimu, dan yang tidak membuatmu merasa sendirian.</p>
+                <p>Dan satu hal lagi, semoga aku bisa menjadi salah satu alasan kamu tersenyum, tempat kamu bercerita, serta seseorang yang membuatmu merasa aman dan dicintai.</p>
+                <p>You deserve all the happiness in this world, my love.</p>
+
+            </div>
+        </div>
+
+        <div class="hal">
+            <h1>A LITTLE THING I WANT YOU TO KNOW</h1>
+
+            <div class="isi">
+                <p>Sayang, ada sesuatu yang ingin aku sampaikan.</p>
+                <p>Mungkin aku tidak selalu pandai mengungkapkan perasaan. Terkadang kata-kataku tidak cukup untuk menjelaskan betapa berharganya kamu bagiku.</p>
+                <p>Namun, percayalah, aku menyayangimu bukan hanya ketika kamu sedang bahagia, sedang tersenyum, atau ketika semuanya berjalan baik-baik saja.</p>
+                <p>Aku juga ingin tetap berada di sisimu ketika kamu sedang lelah, sedih, kehilangan semangat, atau bahkan ketika kamu merasa tidak cukup baik..</p>
+                <p>Kamu tidak perlu menjadi sempurna agar aku bisa menyayangimu. Kamu boleh menjadi dirimu sendiri, dengan segala kelebihan dan kekuranganmu.</p>
+                <p>Aku tidak ingin hanya mengenal sisi terbaikmu. Aku ingin terus belajar memahami setiap sisi dirimu.</p>
+                <p>I love you, exactly as you are.</p>
+            </div>
+        </div>
+
+        <div class="hal">
+            <h1>IF I COULD GIVE YOU ONE THING</h1>
+
+            <div class="isi">
+                <p>Jika aku bisa memberikan satu hal kepadamu, aku ingin memberimu kemampuan untuk melihat dirimu sendiri melalui mataku.</p>
+                <p>Supaya kamu bisa melihat betapa berharganya dirimu, betapa indahnya senyummu, dan betapa bahagianya aku karena bisa memilikimu dalam hidupku.</p>
+                <p>Aku ingin kamu tahu bahwa kehadiranmu bukanlah hal kecil bagiku. Hal-hal sederhana darimu, caramu bercerita, tawamu, bahkan kebiasaan kecilmu yang mungkin tidak kamu sadari, semuanya punya tempat tersendiri di hatiku.</p>
+                <p>Aku mungkin tidak selalu bisa memberikan hadiah yang mewah atau membuat setiap harimu sempurna.</p>
+                <p>Tetapi aku ingin terus memberikan sesuatu yang jauh lebih berarti: ketulusan, perhatian, kesetiaan, dan cinta yang tidak berhenti aku usahakan.</p>
+                <p>Semoga kamu tidak pernah meragukan betapa berartinya dirimu bagiku.</p>
+                
+            </div>
+        </div>
+
+        <div class="hal">
+            <h1>TO MANY MORE BIRTHDAYS TOGETHER</h1>
+
+            <div class="isi">
+                <p>Happy birthday sekali lagi, cinta.</p>
+                <p>Aku tidak tahu seperti apa perjalanan kita ke depannya. Mungkin akan ada banyak cerita indah, mungkin juga ada hari-hari yang tidak selalu mudah.</p>
+                <p>Namun, aku berharap kita bisa terus berjalan bersama, saling memahami, saling menguatkan, dan belajar menjadi lebih baik untuk satu sama lain.</p>
+                <p>Aku ingin merayakan lebih banyak ulang tahunmu, mendengar lebih banyak ceritamu, melihat lebih banyak senyummu, dan menciptakan lebih banyak kenangan bersamamu.</p>
+                <p>Terima kasih sudah menjadi bagian dari hidupku. Terima kasih sudah mengizinkanku menyayangimu.</p>
+                <p>Semoga usia barumu membawa banyak kebahagiaan, kesempatan, dan hal-hal baik yang selama ini kamu impikan.</p>
+                <p>Happy birthday, my favorite person.</p>
+                <p>With all my love,</p>
+                <p>Aku, yang selalu menyayangimu. ❤️</p>
+                <p><strong>P.S. Jangan lupa bahagia, ya, sayang. Karena melihatmu bahagia adalah salah satu hal yang paling aku sukai.</strong></p>
+
+                <span class="surat1" onclick="bukasurat()">❤️</span>
+            </div>
+        </div>
+
+            <div class="tombol">
+                <button class="prev" onclick="sebelumnya ()">
+                ←balik
+                </button>
+                <button class="next" onclick="berikutnya ()">
+                lanjut→
+                </button>
+            </div>
+      </div>
+
+      <div id="easterEgg">
+
+        <div class="kotakEgg">
+
+            
+           
+
+            <button onclick="tutupEgg()">
+                jangan GR
+            </button>
+
+        </div>
+
+</div>
+        
+    </div>
+        <script src="SKRIPT.JS"></script>
+
+        <script>
+            
+            let currentPage = 0;
+            let sudahSelesai = false;
+
+            const pages = document.querySelectorAll(".hal");
+            const cover = document.getElementById("cover");
+            const pagesContainer = document.getElementById("hal");
+
+            const prevButton = document.querySelector(".prev");
+            const nextButton = document.querySelector(".next");
+
+            function openBook() {
+                pagesContainer.style.display = "flex";
+                showPage(currentPage);
+
+                cover.classList.add("buka");
+
+                setTimeout(() => {
+                    cover.style.display = "none";
+                }, 200);
+            }
+
+            function showPage(index, arah = "maju") {
+
+                pages.forEach(page => {
+                    page.classList.remove(
+                        "active",
+                        "flip-maju",
+                        "flip-mundur"
+                    );
+                });
+
+                const halaman = pages[index];
+
+                halaman.classList.add("active");
+
+                if (arah === "maju") {
+                    halaman.classList.add("flip-maju");
+                } else {
+                    halaman.classList.add("flip-mundur");
+                }
+
+                if (currentPage === 0) {
+                    prevButton.textContent = "← sampul";
+                } else {
+                    prevButton.textContent = "← balik";
+                }
+
+                if (currentPage === pages.length - 1) {
+                    nextButton.textContent = "selesai ✓";
+                } else {
+                    nextButton.textContent = "lanjut →";
+                }
+            }
+
+
+            function kembaliCover() {
+
+                pagesContainer.style.display = "none";
+                cover.style.display = "flex";
+                setTimeout(() => {
+                    cover.classList.remove("buka");
+                }, 50);
+                currentPage = 0;
+
+            }
+
+           let jumlahKlikSelesai = 0;
+
+            function berikutnya() {
+                if (currentPage < pages.length - 1) {
+                    currentPage++;
+                    showPage(currentPage, "maju");
+                } else {
+                    if (jumlahKlikSelesai < 5) {
+                        jumlahKlikSelesai++;
+
+                        buatHujanConfetti();
+
+                        if (jumlahKlikSelesai < 5) {
+                            nextButton.textContent =
+                                `SELESAI (${jumlahKlikSelesai}/5) 🎉`;
+                        } else {
+                            nextButton.textContent = "UDAH 5 KALI WOI 😭";
+                        }
+                    } else {
+                        nextButton.textContent = "SELESAI ✓";
+                    }
+                }
+            }
+
+            function sebelumnya() {
+
+                if (currentPage === 0) {
+                    kembaliCover();
+                } else {
+                    currentPage--;
+                    showPage(currentPage, "mundur");
+                }
+
+            }
+
+            function beruangRahasia(event) {
+                event.stopPropagation();
+                cover.style.display = "none";
+                document.getElementById("rahasia").style.display = "flex";
+            }
+
+            function tutupRahasia() {
+                document.getElementById("rahasia").style.display = "none";
+                cover.style.display = "flex";
+            }
+
+            function bungarahasia(event) {
+                event.stopPropagation();
+                document.getElementById("munculbunga").style.display = "flex";
+            }
+
+            function balikrahasia() {
+                document.getElementById("munculbunga").style.display = "none";
+                document.getElementById("tomri").style.display = "none";
+                document.getElementById("surat").style.display = "none";
+            }
+
+            function muor() {
+                document.getElementById("gua").style.display = "block";
+                if (document.getElementById("gua").style.display === "block") {
+                    setTimeout(function() {
+                        document.getElementById("gua").style.display = "none";
+                    }, 3000);
+                }
+            }
+
+            function tomra(event) {
+                document.getElementById("tomri").style.display = "flex";
+            }
+
+            function bukasurat() {
+                document.getElementById("surat").style.display = "flex";
+            }
+
+            const daftarStiker = [
+                "🐻",
+                "🌷",
+                "🎓"
+            ];
+
+            function buatConfetti() {
+
+                const stiker = document.createElement("div");
+
+                stiker.classList.add("confetti");
+
+                const randomStiker =
+                    daftarStiker[
+                        Math.floor(Math.random() * daftarStiker.length)
+                    ];
+
+                stiker.textContent = randomStiker;
+
+                stiker.style.left =
+                    Math.random() * 100 + "vw";
+
+                stiker.style.animationDuration =
+                    Math.random() * 3 + 3 + "s";
+
+
+                stiker.onclick = function() {
+
+                    stiker.textContent = "💥";
+
+                    stiker.classList.add("meledak");
+
+                    setTimeout(function() {
+
+                        stiker.remove();
+
+                    }, 300);
+
+                };
+
+
+                document
+                    .getElementById("confetti-container")
+                    .appendChild(stiker);
+
+
+                setTimeout(function() {
+
+                    stiker.remove();
+
+                }, 7000);
+
+            }
+
+            function buatHujanConfetti() {
+
+                let jumlah = 0;
+
+                const hujan = setInterval(function() {
+
+                    if (jumlah === 16) {
+
+                        buatStikerRahasia();
+
+                    } else {
+
+                        buatConfetti();
+
+                    }
+
+                    jumlah++;
+
+                    if (jumlah >= 30) {
+
+                        clearInterval(hujan);
+
+                    }
+
+                }, 200);
+
+            }
+
+            function buatStikerRahasia() {
+                const stiker = document.createElement("div");
+                stiker.classList.add("confetti");
+                stiker.textContent = "👑";
+                stiker.style.left = Math.random() * 100 + "vw";
+                stiker.style.animationDuration = "6s";
+                stiker.onclick = function() {
+                    bukaEasterEgg();
+                    stiker.remove();
+
+                };
+
+                document
+                    .getElementById("confetti-container")
+                    .appendChild(stiker);
+
+            }
+
+            function bukaEasterEgg() {
+
+                document.getElementById("easterEgg")
+                    .style.display = "flex";
+
+            }
+
+            function tutupEgg() {
+
+                document.getElementById("easterEgg")
+                    .style.display = "none";
+
+            }
+        </script>
+    </body>
+</html>
